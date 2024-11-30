@@ -1,8 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+
+import { VectorBalls } from '@components/VectorBalls';
 
 export default () => (
   <View style={styles.container}>
-    <Text>Edit app/index.tsx to edit this screen.</Text>
+    <VectorBalls />
   </View>
 );
 
@@ -10,6 +12,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: 'black'
   }
 });
