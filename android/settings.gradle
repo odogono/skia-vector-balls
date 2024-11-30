@@ -21,7 +21,7 @@ extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
   }
 }
 
-rootProject.name = 'odgn-expo-starter'
+rootProject.name = 'Skia Vector Balls'
 
 dependencyResolutionManagement {
   versionCatalogs {

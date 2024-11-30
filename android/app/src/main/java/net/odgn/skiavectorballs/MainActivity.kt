@@ -1,4 +1,4 @@
-package net.odgn.expostarter
+package net.odgn.skiavectorballs
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

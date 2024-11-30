@@ -8,8 +8,8 @@ dotenv.config();
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: 'odgn-expo-starter',
-  slug: 'odgn-expo-starter',
+  name: 'Skia Vector Balls',
+  slug: 'skia-vector-balls',
   version: '1.0.0',
   orientation: 'portrait',
   icon: './assets/images/icon.png',
@@ -18,14 +18,14 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   newArchEnabled: true,
   ios: {
     supportsTablet: true,
-    bundleIdentifier: 'net.odgn.expostarter'
+    bundleIdentifier: 'net.odgn.skiavectorballs'
   },
   android: {
     adaptiveIcon: {
       foregroundImage: './assets/images/adaptive-icon.png',
       backgroundColor: '#ffffff'
     },
-    package: 'net.odgn.expostarter'
+    package: 'net.odgn.skiavectorballs'
   },
   web: {
     bundler: 'metro',

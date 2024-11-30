@@ -1,4 +1,4 @@
-package net.odgn.expostarter
+package net.odgn.skiavectorballs
 
 import android.app.Application
 import android.content.res.Configuration
