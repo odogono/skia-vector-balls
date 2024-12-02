@@ -4,9 +4,9 @@ import { makeMutable } from 'react-native-reanimated';
 
 import { Mutable, Position2, Position3 } from '@types';
 
-type Entity = {
+export type Entity = {
   pos: Mutable<Position3>;
-  screenPos: Mutable<Position2>;
+  screenPos: Mutable<Position3>; // x, y, depth
   size: Mutable<number>;
   blur: Mutable<number>;
 };
@@ -14,8 +14,8 @@ type Entity = {
 const createEntity = (): Entity => {
   return {
     pos: makeMutable([0, 0, 0]),
-    size: makeMutable(8),
-    screenPos: makeMutable([0, 0]),
+    size: makeMutable(0),
+    screenPos: makeMutable([0, 0, 0]),
     blur: makeMutable(0)
   };
 };

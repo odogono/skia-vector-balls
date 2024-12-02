@@ -19,7 +19,7 @@ export const Canvas = ({ children }: CanvasProps) => {
       onLayout={(event) => {
         const { width, height } = event.nativeEvent.layout;
         const m = Skia.Matrix();
-        m.translate(width / 2, height / 2);
+        // m.translate(width / 2, height / 2);
         setViewMatrix(m);
       }}
     >

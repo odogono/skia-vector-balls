@@ -1,3 +1,3 @@
-# Welcome to my Expo app 👋
+# 🟢 Vector Balls 🔴
 
-Baseline expo app which has been modified to my tastes.
+
