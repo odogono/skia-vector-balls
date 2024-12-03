@@ -25,9 +25,17 @@ describe('glmatrix', () => {
     // Create modelview matrix (in this case just a simple translation to move points in front of camera)
     const modelview = mat4.create();
 
-    // mat4.lookAt(modelview, [0, 0, 0], [0, 0, -1], [0, 1, 0]);
+    const eye = vec3.fromValues(0, 0, -25);
+    const center = vec3.fromValues(0, 0, -1);
+    const up = vec3.fromValues(0, 1, 0);
+    mat4.lookAt(modelview, eye, center, up);
 
-    mat4.translate(modelview, modelview, [0, 0, 25]); // Move 5 units back
+    // mat4.translate(modelview, modelview, [0, 0, 25]); // Move 5 units back
+
+    // Apply the modeling transformation to modelview
+    // mat4.rotateX(modelview, modelview, rotateX);
+    // mat4.rotateY(modelview, modelview, rotateY);
+    // mat4.rotateZ(modelview, modelview, rotateZ);
 
     // Combine matrices
     mat4.multiply(modelviewProjection, projection, modelview);

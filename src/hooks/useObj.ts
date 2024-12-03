@@ -9,7 +9,9 @@ const log = createLogger('useObj');
 // Define the available geometry files with their dynamic imports
 const geometryFiles = {
   cube: () => import('@assets/geometry/cube.json'),
-  grid: () => import('@assets/geometry/grid.json')
+  grid: () => import('@assets/geometry/grid.json'),
+  point: () => import('@assets/geometry/point.json'),
+  sphere: () => import('@assets/geometry/sphere.json')
   // Add more geometry files as needed
 } as const;
 
