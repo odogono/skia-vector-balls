@@ -11,7 +11,7 @@ export type Entity = {
   blur: Mutable<number>;
 };
 
-const createEntity = (): Entity => {
+export const createEntity = (): Entity => {
   return {
     pos: makeMutable([0, 0, 0]),
     size: makeMutable(0),

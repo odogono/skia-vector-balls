@@ -15,9 +15,6 @@
     "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache"
   },
-  "jest": {
-    "preset": "jest-expo"
-  },
   "dependencies": {
     "@expo/vector-icons": "^14.0.4",
     "@react-navigation/bottom-tabs": "^7.0.12",
@@ -35,6 +32,7 @@
     "expo-symbols": "~0.2.0",
     "expo-system-ui": "~4.0.4",
     "expo-web-browser": "~14.0.1",
+    "gl-matrix": "^3.4.3",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-native": "0.76.3",

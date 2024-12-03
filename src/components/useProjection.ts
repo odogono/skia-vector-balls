@@ -47,7 +47,7 @@ export type Object3 = {
   count: number;
 };
 
-const createObject3 = (input: Position3[]): Object3 => {
+export const createObject3 = (input: Position3[]): Object3 => {
   const points = input.map((point) => [
     point[0],
     point[1],
@@ -70,11 +70,11 @@ const createObject3 = (input: Position3[]): Object3 => {
   };
 };
 
-const createCamera = (width: number, height: number): Camera => {
+export const createCamera = (width: number, height: number): Camera => {
   return {
     position: [0, 0, 25],
     rotation: [0, 0, 0],
-    fov: 90,
+    fov: 45,
     aspectRatio: width / height,
     near: 0.1,
     far: 1000
@@ -92,7 +92,7 @@ type Projection3 = {
   tempMatrix3: Matrix4x4D;
 };
 
-const createProjection = (
+export const createProjection = (
   camera: Camera,
   width: number,
   height: number
@@ -110,7 +110,7 @@ const createProjection = (
   };
 };
 
-const updateProjectionMatrix = (projection: Projection3) => {
+export const updateProjectionMatrix = (projection: Projection3) => {
   'worklet';
 
   const { fov, near, far, aspectRatio } = projection.camera;
@@ -127,7 +127,7 @@ const updateProjectionMatrix = (projection: Projection3) => {
   ];
 };
 
-const updateViewMatrix = (projection: Projection3) => {
+export const updateViewMatrix = (projection: Projection3) => {
   'worklet';
 
   const { tempMatrix, tempMatrix2, tempMatrix3, viewMatrix, camera } =
@@ -163,7 +163,7 @@ const updateViewMatrix = (projection: Projection3) => {
   return projection;
 };
 
-const projectObject3 = (
+export const projectObject3 = (
   projection: Projection3,
   object: Object3,
   entities: Entity[]
@@ -249,7 +249,7 @@ export const useProjection = ({ width, height }: UseProjectionProps) => {
 
   const projection = useDerivedValue(() => {
     camera.value.aspectRatio = width / height;
-    camera.value.position[2] = -25;
+    camera.value.position[2] = -60;
     runOnJS(log.debug)('projection', camera.value);
     const projection = createProjection(camera.value, width, height);
     updateProjectionMatrix(projection);

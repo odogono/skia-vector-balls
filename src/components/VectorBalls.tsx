@@ -36,9 +36,9 @@ export const VectorBalls = () => {
   const [layout, setLayout] = useState<{ width: number; height: number }>();
   const [viewMatrix, setViewMatrix] = useState<SkMatrix>();
   const image1 = useImage(require('@assets/images/sphere-a.png'));
-  const cube = useObj('cube');
+  const cube = useObj('grid');
 
-  const entities = useVectorBallStore({ length: 10 });
+  const entities = useVectorBallStore({ length: 30 });
 
   const { projection } = useProjection({
     width: layout?.width ?? 0,
@@ -51,15 +51,15 @@ export const VectorBalls = () => {
 
   const cubeObject = useProjectedObject(projection, cube, entities);
 
-  useEffect(() => {
-    cubeObject.worldRotation.value = withRepeat(
-      withTiming([Math.PI * 2, 0, 0], {
-        duration: 5000
-      }),
-      -1,
-      true
-    );
-  }, [cubeObject]);
+  // useEffect(() => {
+  //   cubeObject.worldRotation.value = withRepeat(
+  //     withTiming([Math.PI * 2, 0, 0], {
+  //       duration: 8000
+  //     }),
+  //     -1,
+  //     true
+  //   );
+  // }, [cubeObject]);
 
   useAnimatedReaction(
     () => cube,
