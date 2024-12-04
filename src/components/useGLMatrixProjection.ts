@@ -1,10 +1,12 @@
 import { useMemo } from 'react';
+import { LayoutRectangle } from 'react-native';
 
 import {
   makeMutable,
   runOnJS,
   useAnimatedReaction,
   useDerivedValue,
+  useFrameCallback,
   useSharedValue,
   type DerivedValue
 } from 'react-native-reanimated';
@@ -13,6 +15,8 @@ import { mat4, vec3, vec4 } from '@helpers/glMatrixWorklet';
 import { Entity } from '@model/VectorBallStore';
 import { Mutable } from '@types';
 import { createLogger } from '../helpers/log';
+import { debugMsg } from './Debug/Debug';
+import { TrackBallRotatorProps } from './useTrackballRotator';
 
 export type GLMObject = {
   points: Mutable<vec4[]>;
@@ -54,25 +58,39 @@ export const createGLMObject = (points: vec3[]): GLMObject => {
   };
 };
 
-export const projectGLMObject = (
-  projection: GLMProjection,
-  modelviewProjection: mat4,
-  object: GLMObject,
-  entities: Entity[]
-) => {
+interface ProjectGLMObjectProps {
+  projection: GLMProjection;
+  inputModelview?: mat4 | undefined;
+  object: GLMObject;
+  entities: Entity[];
+}
+
+export const projectGLMObject = ({
+  projection,
+  inputModelview,
+  object,
+  entities
+}: ProjectGLMObjectProps) => {
   'worklet';
 
   const { matrix: projMatrix, screenWidth, screenHeight } = projection;
 
   const modelview = mat4.create();
-  const eye = vec3.fromValues(0, 0, -15);
-  const center = vec3.fromValues(0, 0, -1);
-  const up = vec3.fromValues(0, 1, 0);
-  mat4.lookAt(modelview, eye, center, up);
+  const modelviewProjection = mat4.create();
+
+  if (!inputModelview) {
+    const eye = vec3.fromValues(0, 0, -15);
+    const center = vec3.fromValues(0, 0, -1);
+    const up = vec3.fromValues(0, 1, 0);
+    mat4.lookAt(modelview, eye, center, up);
+  } else {
+    mat4.copy(modelview, inputModelview);
+  }
 
   mat4.translate(modelview, modelview, object.translation.value);
 
   // runOnJS(log.debug)('modelview', object.translation.value);
+  // debugMsg.value = `${object.translation.value[0].toFixed(2)} ${object.translation.value[1].toFixed(2)} ${object.translation.value[2].toFixed(2)}`;
 
   mat4.scale(modelview, modelview, object.scale.value);
 
@@ -140,24 +158,22 @@ export type GLMProjection = {
 };
 
 export interface UseGLMatrixProjectionProps {
-  width: number;
-  height: number;
+  layout: LayoutRectangle;
 }
 
 export const useGLMatrixProjection = ({
-  width,
-  height
+  layout
 }: UseGLMatrixProjectionProps) => {
   const modelview = useSharedValue<mat4>(mat4.create());
 
   const projection = useDerivedValue(() => {
     const projection = {
       matrix: mat4.create(),
-      screenWidth: width,
-      screenHeight: height
+      screenWidth: layout.width,
+      screenHeight: layout.height
     };
     const fov = Math.PI / 4; // 45 degrees in radians
-    const aspectRatio = width / height;
+    const aspectRatio = layout.width / layout.height;
     const near = 0.1;
     const far = 1000;
 
@@ -169,25 +185,36 @@ export const useGLMatrixProjection = ({
   return { projection, modelview };
 };
 
-export const useGLMatrixProjectedObject = (
-  projection: DerivedValue<GLMProjection>,
-  points: vec3[],
-  entities: Entity[]
-) => {
-  const modelviewProjection = useSharedValue<mat4>(mat4.create());
+export interface UseGLMatrixProjectedObjectProps {
+  projection: DerivedValue<GLMProjection>;
+  // modelView?: mat4 | undefined;
+  props: DerivedValue<TrackBallRotatorProps>;
+  points: vec3[];
+  entities: Entity[];
+}
+
+export const useGLMatrixProjectedObject = ({
+  projection,
+  props,
+  points,
+  entities
+}: UseGLMatrixProjectedObjectProps) => {
+  // const defaultModelView = useSharedValue<mat4>(mat4.create());
+  // const modelViewProjection = props?.value.viewMatrix ?? mat4.create();
+
   const object = useMemo(() => createGLMObject(points), [points]);
 
   useAnimatedReaction(
-    () => object.points.value,
-    (points) => {
-      // runOnJS(log.debug)('react to rotation', entities?.length);
+    () => [object.points.value, props.value.viewMatrix],
+    ([points, viewMatrix]) => {
+      // runOnJS(log.debug)('react to rotation', points?.length);
 
-      projectGLMObject(
-        projection.value,
-        modelviewProjection.value,
+      projectGLMObject({
+        projection: projection.value,
+        inputModelview: props.value.viewMatrix,
         object,
         entities
-      );
+      });
     }
   );
 

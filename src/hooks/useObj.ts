@@ -11,7 +11,8 @@ const geometryFiles = {
   cube: () => import('@assets/geometry/cube.json'),
   grid: () => import('@assets/geometry/grid.json'),
   point: () => import('@assets/geometry/point.json'),
-  sphere: () => import('@assets/geometry/sphere.json')
+  sphere: () => import('@assets/geometry/sphere.json'),
+  cylinder: () => import('@assets/geometry/cylinder.json')
   // Add more geometry files as needed
 } as const;
 

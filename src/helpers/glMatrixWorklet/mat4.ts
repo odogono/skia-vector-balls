@@ -9,27 +9,95 @@ export const create = (): mat4 => {
   'worklet';
 
   return Array(16).fill(0) as mat4;
-  // const out = new glMatrix.ARRAY_TYPE(16) as mat4;
-  // // if (glMatrix.ARRAY_TYPE != Float32Array) {
-  // out[1] = 0;
-  // out[2] = 0;
-  // out[3] = 0;
-  // out[4] = 0;
-  // out[6] = 0;
-  // out[7] = 0;
-  // out[8] = 0;
-  // out[9] = 0;
-  // out[11] = 0;
-  // out[12] = 0;
-  // out[13] = 0;
-  // out[14] = 0;
-  // // }
-  // // out[0] = 1;
-  // // out[5] = 1;
-  // // out[10] = 1;
-  // // out[15] = 1;
+};
 
-  // return out;
+/**
+ * Set the components of a mat4 to the given values
+ *
+ * @param {mat4} out the receiving matrix
+ * @param {Number} m00 Component in column 0, row 0 position (index 0)
+ * @param {Number} m01 Component in column 0, row 1 position (index 1)
+ * @param {Number} m02 Component in column 0, row 2 position (index 2)
+ * @param {Number} m03 Component in column 0, row 3 position (index 3)
+ * @param {Number} m10 Component in column 1, row 0 position (index 4)
+ * @param {Number} m11 Component in column 1, row 1 position (index 5)
+ * @param {Number} m12 Component in column 1, row 2 position (index 6)
+ * @param {Number} m13 Component in column 1, row 3 position (index 7)
+ * @param {Number} m20 Component in column 2, row 0 position (index 8)
+ * @param {Number} m21 Component in column 2, row 1 position (index 9)
+ * @param {Number} m22 Component in column 2, row 2 position (index 10)
+ * @param {Number} m23 Component in column 2, row 3 position (index 11)
+ * @param {Number} m30 Component in column 3, row 0 position (index 12)
+ * @param {Number} m31 Component in column 3, row 1 position (index 13)
+ * @param {Number} m32 Component in column 3, row 2 position (index 14)
+ * @param {Number} m33 Component in column 3, row 3 position (index 15)
+ * @returns {mat4} out
+ */
+export const set = (
+  out: mat4,
+  m00: number,
+  m01: number,
+  m02: number,
+  m03: number,
+  m10: number,
+  m11: number,
+  m12: number,
+  m13: number,
+  m20: number,
+  m21: number,
+  m22: number,
+  m23: number,
+  m30: number,
+  m31: number,
+  m32: number,
+  m33: number
+): mat4 => {
+  'worklet';
+  out[0] = m00;
+  out[1] = m01;
+  out[2] = m02;
+  out[3] = m03;
+  out[4] = m10;
+  out[5] = m11;
+  out[6] = m12;
+  out[7] = m13;
+  out[8] = m20;
+  out[9] = m21;
+  out[10] = m22;
+  out[11] = m23;
+  out[12] = m30;
+  out[13] = m31;
+  out[14] = m32;
+  out[15] = m33;
+  return out;
+};
+
+/**
+ * Copy the values from one mat4 to another
+ *
+ * @param {mat4} out the receiving matrix
+ * @param {ReadonlyMat4} a the source matrix
+ * @returns {mat4} out
+ */
+export const copy = (out: mat4, a: mat4): mat4 => {
+  'worklet';
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  out[3] = a[3];
+  out[4] = a[4];
+  out[5] = a[5];
+  out[6] = a[6];
+  out[7] = a[7];
+  out[8] = a[8];
+  out[9] = a[9];
+  out[10] = a[10];
+  out[11] = a[11];
+  out[12] = a[12];
+  out[13] = a[13];
+  out[14] = a[14];
+  out[15] = a[15];
+  return out;
 };
 
 /**
