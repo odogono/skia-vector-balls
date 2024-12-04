@@ -1,6 +1,11 @@
 const EPSILON = 0.000001;
 
 /**
+ * 4x4 Matrix<br>Format: column-major, when typed out it looks like row-major<br>The matrices are being post multiplied.
+ * @module mat4
+ */
+
+/**
  * Creates a new identity mat4
  *
  * @returns {mat4} a new 4x4 matrix
@@ -9,6 +14,34 @@ export const create = (): mat4 => {
   'worklet';
 
   return Array(16).fill(0) as mat4;
+};
+
+/**
+ * Creates a new mat4 initialized with values from an existing matrix
+ *
+ * @param {ReadonlyMat4} a matrix to clone
+ * @returns {mat4} a new 4x4 matrix
+ */
+export const clone = (a: mat4): mat4 => {
+  'worklet';
+  const out = create();
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  out[3] = a[3];
+  out[4] = a[4];
+  out[5] = a[5];
+  out[6] = a[6];
+  out[7] = a[7];
+  out[8] = a[8];
+  out[9] = a[9];
+  out[10] = a[10];
+  out[11] = a[11];
+  out[12] = a[12];
+  out[13] = a[13];
+  out[14] = a[14];
+  out[15] = a[15];
+  return out;
 };
 
 /**
@@ -124,6 +157,24 @@ export const identity = (out: mat4): mat4 => {
   out[13] = 0;
   out[14] = 0;
   out[15] = 1;
+  return out;
+};
+
+/**
+ * Returns the translation vector component of a transformation
+ *  matrix. If a matrix is built with fromRotationTranslation,
+ *  the returned vector will be the same as the translation vector
+ *  originally supplied.
+ * @param  {vec3} out Vector to receive translation component
+ * @param  {ReadonlyMat4} mat Matrix to be decomposed (input)
+ * @return {vec3} out
+ */
+export const getTranslation = (out: vec3, mat: mat4): vec3 => {
+  'worklet';
+  out[0] = mat[12];
+  out[1] = mat[13];
+  out[2] = mat[14];
+
   return out;
 };
 
@@ -561,5 +612,112 @@ export const rotateZ = (out: mat4, a: mat4, rad: number): mat4 => {
   out[5] = a11 * c - a01 * s;
   out[6] = a12 * c - a02 * s;
   out[7] = a13 * c - a03 * s;
+  return out;
+};
+
+/**
+ * Calculates a 4x4 matrix from the given quaternion
+ *
+ * @param {mat4} out mat4 receiving operation result
+ * @param {ReadonlyQuat} q Quaternion to create matrix from
+ *
+ * @returns {mat4} out
+ */
+export const fromQuat = (out: mat4, q: quat): mat4 => {
+  'worklet';
+  const x = q[0],
+    y = q[1],
+    z = q[2],
+    w = q[3];
+  const x2 = x + x;
+  const y2 = y + y;
+  const z2 = z + z;
+
+  const xx = x * x2;
+  const yx = y * x2;
+  const yy = y * y2;
+  const zx = z * x2;
+  const zy = z * y2;
+  const zz = z * z2;
+  const wx = w * x2;
+  const wy = w * y2;
+  const wz = w * z2;
+
+  out[0] = 1 - yy - zz;
+  out[1] = yx + wz;
+  out[2] = zx - wy;
+  out[3] = 0;
+
+  out[4] = yx - wz;
+  out[5] = 1 - xx - zz;
+  out[6] = zy + wx;
+  out[7] = 0;
+
+  out[8] = zx + wy;
+  out[9] = zy - wx;
+  out[10] = 1 - xx - yy;
+  out[11] = 0;
+
+  out[12] = 0;
+  out[13] = 0;
+  out[14] = 0;
+  out[15] = 1;
+
+  return out;
+};
+
+/**
+ * Creates a matrix from a quaternion rotation and vector translation
+ * This is equivalent to (but much faster than):
+ *
+ *     mat4.identity(dest);
+ *     mat4.translate(dest, dest, vec);
+ *     let quatMat = mat4.create();
+ *     mat4.fromQuat(quatMat, quat);
+ *     mat4.multiply(dest, dest, quatMat);
+ *
+ * @param {mat4} out mat4 receiving operation result
+ * @param {quat} q Rotation quaternion
+ * @param {ReadonlyVec3} v Translation vector
+ * @returns {mat4} out
+ */
+export const fromRotationTranslation = (out: mat4, q: quat, v: vec3): mat4 => {
+  'worklet';
+  // Quaternion math
+  const x = q[0],
+    y = q[1],
+    z = q[2],
+    w = q[3];
+  const x2 = x + x;
+  const y2 = y + y;
+  const z2 = z + z;
+
+  const xx = x * x2;
+  const xy = x * y2;
+  const xz = x * z2;
+  const yy = y * y2;
+  const yz = y * z2;
+  const zz = z * z2;
+  const wx = w * x2;
+  const wy = w * y2;
+  const wz = w * z2;
+
+  out[0] = 1 - (yy + zz);
+  out[1] = xy + wz;
+  out[2] = xz - wy;
+  out[3] = 0;
+  out[4] = xy - wz;
+  out[5] = 1 - (xx + zz);
+  out[6] = yz + wx;
+  out[7] = 0;
+  out[8] = xz + wy;
+  out[9] = yz - wx;
+  out[10] = 1 - (xx + yy);
+  out[11] = 0;
+  out[12] = v[0];
+  out[13] = v[1];
+  out[14] = v[2];
+  out[15] = 1;
+
   return out;
 };

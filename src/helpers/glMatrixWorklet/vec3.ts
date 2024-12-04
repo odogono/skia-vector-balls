@@ -1,4 +1,19 @@
 /**
+ * 3 Dimensional Vector
+ * @module vec3
+ */
+
+/**
+ * Creates a new, empty vec3
+ *
+ * @returns {vec3} a new 3D vector
+ */
+export const create = (): vec3 => {
+  'worklet';
+  return [0, 0, 0];
+};
+
+/**
  * Creates a new vec3 initialized with the given values
  *
  * @param {Number} x X component
@@ -13,6 +28,20 @@ export const fromValues = (
 ): vec3 => {
   'worklet';
   return [x, y, z];
+};
+
+/**
+ * Calculates the length of a vec3
+ *
+ * @param {ReadonlyVec3} a vector to calculate length of
+ * @returns {Number} length of a
+ */
+export const length = (a: vec3): number => {
+  'worklet';
+  const x = a[0];
+  const y = a[1];
+  const z = a[2];
+  return Math.sqrt(x * x + y * y + z * z);
 };
 
 /**
@@ -36,6 +65,21 @@ export const normalize = (out: vec3, a: vec3): vec3 => {
   out[0] = a[0] * len;
   out[1] = a[1] * len;
   out[2] = a[2] * len;
+  return out;
+};
+
+/**
+ * Negates the components of a vec3
+ *
+ * @param {vec3} out the receiving vector
+ * @param {ReadonlyVec3} a vector to negate
+ * @returns {vec3} out
+ */
+export const negate = (out: vec3, a: vec3): vec3 => {
+  'worklet';
+  out[0] = -a[0];
+  out[1] = -a[1];
+  out[2] = -a[2];
   return out;
 };
 

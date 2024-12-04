@@ -1,4 +1,19 @@
 /**
+ * 4 Dimensional Vector
+ * @module vec4
+ */
+
+/**
+ * Creates a new, empty vec4
+ *
+ * @returns {vec4} a new 4D vector
+ */
+export const create = (): vec4 => {
+  'worklet';
+  return [0, 0, 0, 0];
+};
+
+/**
  * Creates a new vec4 initialized with the given values
  *
  * @param {Number} x X component

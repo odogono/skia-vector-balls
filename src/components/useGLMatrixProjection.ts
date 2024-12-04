@@ -65,6 +65,30 @@ interface ProjectGLMObjectProps {
   entities: Entity[];
 }
 
+const updateModelViewMatrix = (modelViewMatrix: mat4, rotationMatrix: mat4) => {
+  'worklet';
+  // Extract the camera position
+  const cameraPos = vec3.create();
+  mat4.getTranslation(cameraPos, modelViewMatrix);
+
+  // Create a pure rotation matrix by removing translation
+  const viewRotation = mat4.clone(modelViewMatrix);
+  viewRotation[12] = viewRotation[13] = viewRotation[14] = 0;
+
+  // Apply trackball rotation to view rotation
+  mat4.multiply(viewRotation, viewRotation, rotationMatrix);
+
+  // Reconstruct matrix with camera position
+  viewRotation[12] = cameraPos[0];
+  viewRotation[13] = cameraPos[1];
+  viewRotation[14] = cameraPos[2];
+
+  // Update the model view matrix
+  mat4.copy(modelViewMatrix, viewRotation);
+
+  return modelViewMatrix;
+};
+
 export const projectGLMObject = ({
   projection,
   inputModelview,
@@ -78,17 +102,24 @@ export const projectGLMObject = ({
   const modelview = mat4.create();
   const modelviewProjection = mat4.create();
 
-  if (!inputModelview) {
-    const eye = vec3.fromValues(0, 0, -15);
-    const center = vec3.fromValues(0, 0, -1);
-    const up = vec3.fromValues(0, 1, 0);
-    mat4.lookAt(modelview, eye, center, up);
-  } else {
-    mat4.copy(modelview, inputModelview);
-  }
+  // if (inputModelview) {
+  //   mat4.copy(modelview, inputModelview);
+  // }
+
+  const eye = vec3.fromValues(0, 0, -15);
+  const center = vec3.fromValues(0, 0, -1);
+  const up = vec3.fromValues(0, 1, 0);
+  mat4.lookAt(modelview, eye, center, up);
+
+  // } else {
+  //   mat4.copy(modelview, inputModelview);
+  // }
 
   mat4.translate(modelview, modelview, object.translation.value);
 
+  if (inputModelview) {
+    updateModelViewMatrix(modelview, inputModelview);
+  }
   // runOnJS(log.debug)('modelview', object.translation.value);
   // debugMsg.value = `${object.translation.value[0].toFixed(2)} ${object.translation.value[1].toFixed(2)} ${object.translation.value[2].toFixed(2)}`;
 

@@ -17,6 +17,7 @@ declare type mat4 =
      number, number, number, number]
   | IndexedCollection;
 
+declare type quat = [number, number, number, number] | IndexedCollection;
 declare type vec2 = [number, number] | IndexedCollection;
 declare type vec3 = [number, number, number] | IndexedCollection;
 declare type vec4 = [number, number, number, number] | IndexedCollection;

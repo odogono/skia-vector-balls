@@ -32,6 +32,7 @@ import {
   useGLMatrixProjectedObject,
   useGLMatrixProjection
 } from './useGLMatrixProjection';
+import { useQTrackballRotator } from './useQTrackballRotator';
 import { useTrackballRotator } from './useTrackballRotator';
 
 const log = createLogger('VectorBalls');
@@ -57,27 +58,16 @@ export const VectorBalls = () => {
     layout
   });
 
-  const { gesture, props } = useTrackballRotator({
-    layout,
-    viewDistance: 30,
-    viewpointDirection: [0, 0, 1],
-    viewUp: [0, 1, 0]
-  });
-  // useEffect(() => {
-  //   log.debug('cube', cube);
-  // }, []);
-
-  // useDerivedValue(() => {
-  //   runOnJS(log.debug)('trackballViewMatrix', trackballViewMatrix.value);
-  //   return trackballViewMatrix.value;
+  // const { gesture, props } = useTrackballRotator({
+  //   layout,
+  //   viewDistance: 0,
+  //   viewpointDirection: [0, 0, 1],
+  //   viewUp: [0, 1, 0]
   // });
 
-  // useAnimatedReaction(
-  //   () => props.value.viewMatrix,
-  //   (viewMatrix) => {
-  //     runOnJS(log.debug)('🙌 viewMatrix changed', viewMatrix);
-  //   }
-  // );
+  const { gesture, props } = useQTrackballRotator({
+    layout
+  });
 
   // const cubeObject = useProjectedObject(projection, cube, entities);
   const cubeObject = useGLMatrixProjectedObject({
@@ -104,8 +94,8 @@ export const VectorBalls = () => {
     //   -1,
     //   false
     // );
-    cubeObject.scale.value = vec3.fromValues(2, 3, 2);
-    // cubeObject.translation.value = vec3.fromValues(0, 0, 25);
+    cubeObject.scale.value = vec3.fromValues(2, 5, 2);
+    cubeObject.translation.value = vec3.fromValues(0, 0, 15);
     // cubeObject.translation.value = withRepeat(
     //   withTiming([0, 0, 10], {
     //     duration: 2000
