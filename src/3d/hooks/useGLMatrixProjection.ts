@@ -11,12 +11,11 @@ import {
   type DerivedValue
 } from 'react-native-reanimated';
 
-import { mat4, vec3, vec4 } from '@helpers/glMatrixWorklet';
-import { Entity } from '@model/VectorBallStore';
+import { mat4, vec3, vec4 } from '@3d/glMatrixWorklet';
+import { Entity } from '@3d/model/VectorBallStore';
+import { createLogger } from '@helpers/log';
 import { Mutable } from '@types';
-import { createLogger } from '../helpers/log';
-import { debugMsg } from './Debug/Debug';
-import { TrackBallRotatorProps } from './useTrackballRotator';
+import { QTrackBallRotatorProps } from './useQTrackballRotator';
 
 export type GLMObject = {
   points: Mutable<vec4[]>;
@@ -102,18 +101,10 @@ export const projectGLMObject = ({
   const modelview = mat4.create();
   const modelviewProjection = mat4.create();
 
-  // if (inputModelview) {
-  //   mat4.copy(modelview, inputModelview);
-  // }
-
   const eye = vec3.fromValues(0, 0, -15);
   const center = vec3.fromValues(0, 0, -1);
   const up = vec3.fromValues(0, 1, 0);
   mat4.lookAt(modelview, eye, center, up);
-
-  // } else {
-  //   mat4.copy(modelview, inputModelview);
-  // }
 
   mat4.translate(modelview, modelview, object.translation.value);
 
@@ -219,7 +210,7 @@ export const useGLMatrixProjection = ({
 export interface UseGLMatrixProjectedObjectProps {
   projection: DerivedValue<GLMProjection>;
   // modelView?: mat4 | undefined;
-  props: DerivedValue<TrackBallRotatorProps>;
+  props: DerivedValue<QTrackBallRotatorProps>;
   points: vec3[];
   entities: Entity[];
 }

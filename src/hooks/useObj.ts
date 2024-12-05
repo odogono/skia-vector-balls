@@ -12,7 +12,7 @@ const geometryFiles = {
   grid: () => import('@assets/geometry/grid.json'),
   point: () => import('@assets/geometry/point.json'),
   sphere: () => import('@assets/geometry/sphere.json'),
-  cylinder: () => import('@assets/geometry/cylinder.json')
+  cylinder: () => import('@assets/geometry/cylinder')
   // Add more geometry files as needed
 } as const;
 
@@ -31,8 +31,13 @@ export const useObj = (key: GeometryKey) => {
     const loadGeometry = async () => {
       try {
         const module = await geometryFiles[key]();
-        const obj = module.default;
-        const data = obj.data.join('\n');
+        let data = '';
+        if (module && 'default' in module) {
+          const obj = module.default;
+          data = obj.data.join('\n');
+        } else if (module && 'geometry' in module) {
+          data = module.geometry;
+        }
         const parsedVertices = parseObj(data);
         setVertices(parsedVertices);
         log.debug('Parsed vertices', parsedVertices.length, 'from', key);

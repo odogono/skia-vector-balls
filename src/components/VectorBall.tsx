@@ -1,29 +1,15 @@
-import { useEffect } from 'react';
+import { Blur, Group, Image, SkImage, Skia } from '@shopify/react-native-skia';
+import { useAnimatedReaction, useSharedValue } from 'react-native-reanimated';
 
-import {
-  Blur,
-  Group,
-  Image,
-  SkImage,
-  Skia,
-  useImage
-} from '@shopify/react-native-skia';
-import {
-  SharedValue,
-  useAnimatedReaction,
-  useSharedValue,
-  withRepeat,
-  withTiming
-} from 'react-native-reanimated';
-
+import { vec3 } from '@3d/glMatrixWorklet';
 import { createLogger } from '@helpers/log';
-import { Mutable, Position2, Position3 } from '@types';
+import { Mutable } from '@types';
 
 export type VectorBallProps = {
   image: SkImage | null;
   blurValue: Mutable<number>;
   size: Mutable<number>;
-  pos: Mutable<Position3>;
+  pos: Mutable<vec3>;
 };
 
 export const VectorBall = ({
@@ -35,7 +21,7 @@ export const VectorBall = ({
   const matrix = useSharedValue(Skia.Matrix());
 
   useAnimatedReaction(
-    () => [pos.value, size.value] as [Position3, number],
+    () => [pos.value, size.value] as [vec3, number],
     ([pos, size]) => {
       matrix.modify((m) => {
         m.identity();

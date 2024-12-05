@@ -2,20 +2,21 @@ import { useState } from 'react';
 
 import { makeMutable } from 'react-native-reanimated';
 
-import { Mutable, Position2, Position3 } from '@types';
+import { vec3 } from '@3d/glMatrixWorklet';
+import { Mutable } from '@types';
 
 export type Entity = {
-  pos: Mutable<Position3>;
-  screenPos: Mutable<Position3>; // x, y, depth
+  pos: Mutable<vec3>;
+  screenPos: Mutable<vec3>; // x, y, depth
   size: Mutable<number>;
   blur: Mutable<number>;
 };
 
 export const createEntity = (): Entity => {
   return {
-    pos: makeMutable([0, 0, 0]),
+    pos: makeMutable(vec3.create()),
     size: makeMutable(0),
-    screenPos: makeMutable([0, 0, 0]),
+    screenPos: makeMutable(vec3.create()),
     blur: makeMutable(0)
   };
 };

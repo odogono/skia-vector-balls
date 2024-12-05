@@ -2,10 +2,7 @@ import { useEffect, useState } from 'react';
 import { LayoutRectangle, StyleSheet } from 'react-native';
 
 import {
-  Blur,
   Group,
-  Image,
-  SkImage,
   SkMatrix,
   Skia,
   Canvas as SkiaCanvas,
@@ -23,17 +20,16 @@ import {
   withTiming
 } from 'react-native-reanimated';
 
-import { vec3 } from '@helpers/glMatrixWorklet';
-import { createLogger } from '@helpers/log';
-import { useObj } from '@hooks/useObj';
-import { useVectorBallStore } from '@model/VectorBallStore';
-import { VectorBall } from './VectorBall';
+import { vec3 } from '@3d/glMatrixWorklet';
 import {
   useGLMatrixProjectedObject,
   useGLMatrixProjection
-} from './useGLMatrixProjection';
-import { useQTrackballRotator } from './useQTrackballRotator';
-import { useTrackballRotator } from './useTrackballRotator';
+} from '@3d/hooks/useGLMatrixProjection';
+import { useQTrackballRotator } from '@3d/hooks/useQTrackballRotator';
+import { useVectorBallStore } from '@3d/model/VectorBallStore';
+import { createLogger } from '@helpers/log';
+import { useObj } from '@hooks/useObj';
+import { VectorBall } from './VectorBall';
 
 const log = createLogger('VectorBalls');
 
@@ -50,33 +46,21 @@ export const VectorBalls = () => {
 
   const entities = useVectorBallStore({ length: 80 });
 
-  // const { projection } = useProjection({
-  //   width: layout?.width ?? 0,
-  //   height: layout?.height ?? 0
-  // });
   const { projection } = useGLMatrixProjection({
     layout
   });
-
-  // const { gesture, props } = useTrackballRotator({
-  //   layout,
-  //   viewDistance: 0,
-  //   viewpointDirection: [0, 0, 1],
-  //   viewUp: [0, 1, 0]
-  // });
 
   const { gesture, props } = useQTrackballRotator({
     layout
   });
 
-  // const cubeObject = useProjectedObject(projection, cube, entities);
   const cubeObject = useGLMatrixProjectedObject({
     projection,
     props,
-    // modelView: props.value.viewMatrix,
     points: cube,
     entities
   });
+
   useEffect(() => {
     // cubeObject.rotationY.value = Math.PI / 2.5;
     cubeObject.rotationY.value = withRepeat(

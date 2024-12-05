@@ -3,7 +3,7 @@ import { LayoutRectangle } from 'react-native';
 import { Gesture } from 'react-native-gesture-handler';
 import { useDerivedValue } from 'react-native-reanimated';
 
-import { mat4, quat, vec2, vec3 } from '@helpers/glMatrixWorklet';
+import { mat4, quat, vec2, vec3 } from '@3d/glMatrixWorklet';
 import { createLogger } from '@helpers/log';
 
 type UseQTrackballRotatorProps = {

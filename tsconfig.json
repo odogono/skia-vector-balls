@@ -4,6 +4,9 @@
     "strict": true,
     "module": "ESNext",
     "paths": {
+      "@3d/*": [
+        "./src/3d/*"
+      ],
       "@assets/*": [
         "./assets/*"
       ],
