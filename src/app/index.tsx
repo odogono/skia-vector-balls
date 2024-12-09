@@ -9,7 +9,7 @@ export default () => (
   <GestureHandlerRootView style={styles.gestureContainer}>
     <View style={styles.container}>
       <VectorBalls />
-      <Debug />
+      {/* <Debug /> */}
     </View>
   </GestureHandlerRootView>
 );

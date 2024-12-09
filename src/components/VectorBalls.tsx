@@ -21,14 +21,14 @@ import {
 } from 'react-native-reanimated';
 
 import { vec3 } from '@3d/glMatrixWorklet';
-import {
-  useGLMatrixProjectedObject,
-  useGLMatrixProjection
-} from '@3d/hooks/useGLMatrixProjection';
 import { useQTrackballRotator } from '@3d/hooks/useQTrackballRotator';
+import { useVBCamera } from '@3d/hooks/useVBCamera';
+import { useVBProjectedObject } from '@3d/hooks/useVBProjectedObject';
+import { useVBProjection } from '@3d/hooks/useVBProjection';
 import { useVectorBallStore } from '@3d/model/VectorBallStore';
 import { createLogger } from '@helpers/log';
 import { useObj } from '@hooks/useObj';
+import { debugMsg2, debugMsg3, debugMsg } from './Debug/Debug';
 import { VectorBall } from './VectorBall';
 
 const log = createLogger('VectorBalls');
@@ -44,9 +44,15 @@ export const VectorBalls = () => {
   const image1 = useImage(require('@assets/images/sphere-a.png'));
   const cube = useObj('cylinder');
 
-  const entities = useVectorBallStore({ length: 80 });
+  // const testVec = useSharedValue(0);
+  // const testVec2 = useSharedValue([0]);
+  // const testVec3 = useSharedValue({ x: 0 });
 
-  const { projection } = useGLMatrixProjection({
+  const camera = useVBCamera();
+
+  const screenObjects = useVectorBallStore({ length: 80 });
+
+  const { projection } = useVBProjection({
     layout
   });
 
@@ -54,12 +60,23 @@ export const VectorBalls = () => {
     layout
   });
 
-  const cubeObject = useGLMatrixProjectedObject({
+  const cubeObject = useVBProjectedObject({
+    camera,
     projection,
     props,
     points: cube,
-    entities
+    screenObjects
   });
+
+  // useAnimatedReaction(
+  //   () => [testVec.value, testVec2.value, testVec3.value],
+  //   ([value, value2, value3]) => {
+  //     // const { x, y, z } = value3;
+  //     // debugMsg.value = `${value.toFixed(2)}`;
+  //     // debugMsg2.value = `${value2[0].toFixed(2)} ${value2[1].toFixed(2)} ${value2[2].toFixed(2)}`;
+  //     // debugMsg3.value = `${x.toFixed(2)} ${y.toFixed(2)} ${z.toFixed(2)}`;
+  //   }
+  // );
 
   useEffect(() => {
     // cubeObject.rotationY.value = Math.PI / 2.5;
@@ -68,6 +85,17 @@ export const VectorBalls = () => {
       -1,
       false
     );
+
+    camera.pos.value = vec3.fromValues(0, 0, -50);
+    camera.pos.value = withRepeat(
+      withTiming(vec3.fromValues(0, 0, -10), {
+        duration: 4000,
+        easing: Easing.linear
+      }),
+      1,
+      false
+    );
+
     // cubeObject.rotationX.value = withRepeat(
     //   withTiming(Math.PI * 2, { duration: 5000, easing: Easing.linear }),
     //   -1,
@@ -111,13 +139,13 @@ export const VectorBalls = () => {
         }}
       >
         <Group matrix={viewMatrix}>
-          {entities.map((entity, index) => (
+          {screenObjects.map((obj, index) => (
             <VectorBall
               key={`vb-${index}`}
               image={image1}
-              blurValue={entity.blur}
-              size={entity.size}
-              pos={entity.screenPos}
+              blurValue={obj.blur}
+              size={obj.size}
+              pos={obj.screenPos}
             />
           ))}
         </Group>
