@@ -28,6 +28,7 @@ import { useVBProjection } from '@3d/hooks/useVBProjection';
 import { useVectorBallStore } from '@3d/model/VectorBallStore';
 import { createLogger } from '@helpers/log';
 import { useObj } from '@hooks/useObj';
+import { createVector3 } from '../3d/vector3';
 import { debugMsg2, debugMsg3, debugMsg } from './Debug/Debug';
 import { VectorBall } from './VectorBall';
 
@@ -80,21 +81,33 @@ export const VectorBalls = () => {
 
   useEffect(() => {
     // cubeObject.rotationY.value = Math.PI / 2.5;
-    cubeObject.rotationY.value = withRepeat(
-      withTiming(Math.PI * 2, { duration: 4000, easing: Easing.linear }),
+    // cubeObject.rotationY.value = withRepeat(
+    //   withTiming(Math.PI * 2, { duration: 4000, easing: Easing.linear }),
+    //   -1,
+    //   false
+    // );
+
+    cubeObject.rotation.value = withRepeat(
+      withTiming(createVector3(Math.PI * 2, Math.PI * 2, Math.PI * 2), {
+        duration: 4000,
+        easing: Easing.linear
+      }),
       -1,
       false
     );
 
-    camera.pos.value = vec3.fromValues(0, 0, -50);
-    camera.pos.value = withRepeat(
-      withTiming(vec3.fromValues(0, 0, -10), {
-        duration: 4000,
-        easing: Easing.linear
-      }),
-      1,
-      false
-    );
+    camera.pos.value = createVector3(0, 0, -10);
+
+    camera.pos.value = createVector3(0, 0, -10);
+    // camera.pos.value = createVector3(0, 0, -50);
+    // camera.pos.value = withRepeat(
+    //   withTiming(createVector3(0, 0, -10), {
+    //     duration: 4000,
+    //     easing: Easing.linear
+    //   }),
+    //   1,
+    //   false
+    // );
 
     // cubeObject.rotationX.value = withRepeat(
     //   withTiming(Math.PI * 2, { duration: 5000, easing: Easing.linear }),
@@ -106,15 +119,15 @@ export const VectorBalls = () => {
     //   -1,
     //   false
     // );
-    cubeObject.scale.value = vec3.fromValues(2, 5, 2);
-    cubeObject.translation.value = vec3.fromValues(0, 0, 15);
+    cubeObject.scale.value = createVector3(2, 5, 2);
+    cubeObject.translation.value = createVector3(0, 0, 15);
     // cubeObject.translation.value = withRepeat(
-    //   withTiming([0, 0, 10], {
+    //   withTiming(createVector3(0, 0, 5), {
     //     duration: 2000
     //     // easing: Easing.linear
     //   }),
     //   -1,
-    //   false
+    //   true
     // );
   }, [cubeObject]);
 

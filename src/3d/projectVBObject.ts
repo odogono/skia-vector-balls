@@ -1,6 +1,7 @@
-import { mat4, vec3, vec4 } from '@3d/glMatrixWorklet';
+import { mat4, vec4 } from '@3d/glMatrixWorklet';
 import { GLMProjection, VBCamera, VBObject, VBScreenObject } from './types';
 import { updateModelViewMatrix } from './updateModelViewMatrix';
+import { vec3FromVector3 } from './vector3';
 
 interface ProjectVBObjectProps {
   camera: VBCamera;
@@ -24,7 +25,9 @@ export const projectVBObject = ({
   const modelview = mat4.clone(camera.matrix.value);
   const modelviewProjection = mat4.create();
 
-  mat4.translate(modelview, modelview, object.translation.value);
+  const vec3Translation = vec3FromVector3(object.translation.value);
+
+  mat4.translate(modelview, modelview, vec3Translation);
 
   if (inputModelview) {
     updateModelViewMatrix(modelview, inputModelview);
@@ -32,16 +35,16 @@ export const projectVBObject = ({
   // runOnJS(log.debug)('modelview', object.translation.value);
   // debugMsg.value = `${object.translation.value[0].toFixed(2)} ${object.translation.value[1].toFixed(2)} ${object.translation.value[2].toFixed(2)}`;
 
-  mat4.scale(modelview, modelview, object.scale.value);
+  const { x, y, z } = object.rotation.value;
 
-  mat4.rotateX(modelview, modelview, object.rotationX.value);
-  mat4.rotateY(modelview, modelview, object.rotationY.value);
-  mat4.rotateZ(modelview, modelview, object.rotationZ.value);
+  mat4.rotateX(modelview, modelview, x);
+  mat4.rotateY(modelview, modelview, y);
+  mat4.rotateZ(modelview, modelview, z);
+
+  const vec3Scale = vec3FromVector3(object.scale.value);
+  mat4.scale(modelview, modelview, vec3Scale);
 
   mat4.multiply(modelviewProjection, projMatrix, modelview);
-
-  // runOnJS(log.debug)('projMatrix', projMatrix);
-  // runOnJS(log.debug)('modelviewProjection', modelviewProjection);
 
   const points = object.points.value;
   const screenPoints = object.screenPoints.value;
