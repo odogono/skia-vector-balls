@@ -1,4 +1,11 @@
-import { Blur, Group, Image, SkImage, Skia } from '@shopify/react-native-skia';
+import {
+  BlendColor,
+  Blur,
+  Group,
+  Image,
+  SkImage,
+  Skia
+} from '@shopify/react-native-skia';
 import { useAnimatedReaction, useSharedValue } from 'react-native-reanimated';
 
 import { vec3 } from '@3d/glMatrixWorklet';
@@ -36,6 +43,7 @@ export const VectorBall = ({
 
   return (
     <Group matrix={matrix}>
+      <BlendColor color='#00FF0077' mode='srcATop' />
       <Image image={image} fit='contain' width={size} height={size}>
         <Blur blur={blurValue} />
       </Image>

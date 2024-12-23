@@ -43,7 +43,7 @@ export const VectorBalls = () => {
   });
   const [viewMatrix, setViewMatrix] = useState<SkMatrix>();
   const image1 = useImage(require('@assets/images/sphere-a.png'));
-  const cube = useObj('cylinder');
+  const cube = useObj('tree');
 
   // const testVec = useSharedValue(0);
   // const testVec2 = useSharedValue([0]);
@@ -88,7 +88,7 @@ export const VectorBalls = () => {
     // );
 
     cubeObject.rotation.value = withRepeat(
-      withTiming(createVector3(Math.PI * 2, Math.PI * 2, Math.PI * 2), {
+      withTiming(createVector3(0, Math.PI * 2, 0), {
         duration: 4000,
         easing: Easing.linear
       }),
@@ -119,7 +119,7 @@ export const VectorBalls = () => {
     //   -1,
     //   false
     // );
-    cubeObject.scale.value = createVector3(2, 5, 2);
+    cubeObject.scale.value = createVector3(3, 2, 3);
     cubeObject.translation.value = createVector3(0, 0, 15);
     // cubeObject.translation.value = withRepeat(
     //   withTiming(createVector3(0, 0, 5), {
