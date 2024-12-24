@@ -4,7 +4,7 @@ import { Gesture } from 'react-native-gesture-handler';
 import { useDerivedValue } from 'react-native-reanimated';
 
 import { mat4, quat, vec2, vec3 } from '@3d/glMatrixWorklet';
-import { createLogger } from '@helpers/log';
+import { createLog } from '@helpers/log';
 
 type UseQTrackballRotatorProps = {
   layout: LayoutRectangle;
@@ -21,7 +21,7 @@ export type QTrackBallRotatorProps = {
 
 const ROTATION_SENSITIVITY = 8.0;
 
-const log = createLogger('useQTrackballRotator');
+const log = createLog('useQTrackballRotator');
 
 export const useQTrackballRotator = ({ layout }: UseQTrackballRotatorProps) => {
   const props = useDerivedValue<QTrackBallRotatorProps>(() => {

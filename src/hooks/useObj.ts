@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import { createLogger } from '@helpers/log';
+import { createLog } from '@helpers/log';
 import { parseObj } from '@helpers/parseObj';
 import { Position3 } from '../types';
 
-const log = createLogger('useObj');
+const log = createLog('useObj');
 
 // Define the available geometry files with their dynamic imports
 const geometryFiles = {

@@ -9,7 +9,7 @@ import {
 import { useAnimatedReaction, useSharedValue } from 'react-native-reanimated';
 
 import { vec3 } from '@3d/glMatrixWorklet';
-import { createLogger } from '@helpers/log';
+import { createLog } from '@helpers/log';
 import { Mutable } from '@types';
 
 export type VectorBallProps = {

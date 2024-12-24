@@ -26,13 +26,13 @@ import { useVBCamera } from '@3d/hooks/useVBCamera';
 import { useVBProjectedObject } from '@3d/hooks/useVBProjectedObject';
 import { useVBProjection } from '@3d/hooks/useVBProjection';
 import { useVectorBallStore } from '@3d/model/VectorBallStore';
-import { createLogger } from '@helpers/log';
+import { createLog } from '@helpers/log';
 import { useObj } from '@hooks/useObj';
 import { createVector3 } from '../3d/vector3';
 import { debugMsg2, debugMsg3, debugMsg } from './Debug/Debug';
 import { VectorBall } from './VectorBall';
 
-const log = createLogger('VectorBalls');
+const log = createLog('VectorBalls');
 
 export const VectorBalls = () => {
   const [layout, setLayout] = useState<LayoutRectangle>({

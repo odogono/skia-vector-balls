@@ -7,12 +7,12 @@ import {
 } from 'react-native-reanimated';
 
 import { mat4, vec3 } from '@3d/glMatrixWorklet';
-import { createLogger } from '@helpers/log';
+import { createLog } from '@helpers/log';
 import { Vector3 } from '@types';
 import { VBCamera } from '../types';
 import { createVector3, vec3FromVector3 } from '../vector3';
 
-const log = createLogger('useVBCamera');
+const log = createLog('useVBCamera');
 
 export type UseVBCameraProps = {
   pos?: Vector3;
