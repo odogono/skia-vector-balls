@@ -6,6 +6,7 @@ export type VBScreenObject = {
   screenPos: Mutable<vec3>; // x, y, depth
   size: Mutable<number>;
   blur: Mutable<number>;
+  color: Mutable<vec4>;
 };
 
 export type VBObject = {
@@ -13,6 +14,7 @@ export type VBObject = {
   screenPoints: Mutable<vec4[]>;
   sizes: Mutable<number[]>;
   blur: Mutable<number[]>;
+  colors: Mutable<vec4[]>;
   rotation: Mutable<Vector3>;
   translation: Mutable<Vector3>;
   scale: Mutable<Vector3>;

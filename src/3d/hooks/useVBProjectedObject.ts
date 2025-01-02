@@ -47,9 +47,6 @@ export const useVBProjectedObject = ({
         projection.value
       ] as [vec4[], mat4, GLMProjection],
     ([points, viewMatrix, projection]) => {
-      // runOnJS(log.debug)('reprojecting object', {
-      //   viewDimsUpdate
-      // });
       if (!projection.isValid) return;
       projectVBObject({
         camera,

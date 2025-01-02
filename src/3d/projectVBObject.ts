@@ -76,7 +76,8 @@ export const projectVBObject = ({
     const w = vec4Point[3];
     screenPoint[0] = (vec4Point[0] / w + 1) * 0.5 * screenWidth;
     screenPoint[1] = (1 - vec4Point[1] / w) * 0.5 * screenHeight;
-    screenPoint[2] = vec4Point[2]; //(40 - vec4Point[2]) * 3; // / w;
+    screenPoint[2] = vec4Point[2];
+    screenPoint[3] = ii; //(40 - vec4Point[2]) * 3; // / w;
     // runOnJS(log.debug)('screenPoint', ii, vec4Point[2], screenPoint[2], {
     //   screenWidth,
     //   screenHeight
@@ -89,6 +90,7 @@ export const projectVBObject = ({
   if (screenObjects) {
     for (let ii = 0; ii < screenPoints.length; ii++) {
       const screenPoint = screenPoints[ii];
+      const color = object.colors.value[screenPoint[3]];
       const screenObject = screenObjects[ii];
       if (!screenObject) {
         break;
@@ -98,6 +100,7 @@ export const projectVBObject = ({
       screenObject.screenPos.value = [screenPoint[0], screenPoint[1], z];
       screenObject.size.value = z;
       screenObject.blur.value = blur;
+      screenObject.color.value = color;
     }
   }
 };

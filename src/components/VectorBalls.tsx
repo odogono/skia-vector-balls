@@ -2,7 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { LayoutRectangle, StyleSheet } from 'react-native';
 
 import {
+  Blur,
   Group,
+  Rect,
   SkMatrix,
   Skia,
   Canvas as SkiaCanvas,
@@ -20,7 +22,7 @@ import {
   withTiming
 } from 'react-native-reanimated';
 
-import { vec3 } from '@3d/glMatrixWorklet';
+import { vec3, vec4 } from '@3d/glMatrixWorklet';
 import { useQTrackballRotator } from '@3d/hooks/useQTrackballRotator';
 import { useVBCamera } from '@3d/hooks/useVBCamera';
 import { useVBProjectedObject } from '@3d/hooks/useVBProjectedObject';
@@ -43,11 +45,15 @@ export const VectorBalls = () => {
 
   // const cube = useObj('tree');
 
-  const object = useMemo(() => createCube(), []);
+  const rows = 14;
+  const columns = 9;
+
+  const object = useMemo(() => createGridVBObject(rows, columns), []);
+  const objectScale = 1.3;
 
   const camera = useVBCamera();
 
-  const screenObjects = useVectorBallStore({ length: 80 });
+  const screenObjects = useVectorBallStore({ length: rows * columns });
 
   const { projection } = useVBProjection({
     viewDims
@@ -91,7 +97,7 @@ export const VectorBalls = () => {
     //   false
     // );
 
-    object.scale.value = createVector3(3, 3, 3);
+    object.scale.value = createVector3(objectScale, objectScale, objectScale);
     object.translation.value = createVector3(0, 0, 15);
     // object.translation.value = withRepeat(
     //   withTiming(createVector3(0, 0, 5), {
@@ -122,9 +128,24 @@ export const VectorBalls = () => {
               blurValue={obj.blur}
               size={obj.size}
               pos={obj.screenPos}
+              color={obj.color}
             />
           ))}
         </Group>
+        <Rect
+          x={viewDims.width / 2}
+          y={0}
+          width={1}
+          height={viewDims.height}
+          color='red'
+        />
+        <Rect
+          x={0}
+          y={viewDims.height / 2}
+          width={viewDims.width}
+          height={1}
+          color='red'
+        />
       </SkiaCanvas>
     </GestureDetector>
   );
@@ -149,7 +170,31 @@ const createCube = () => {
     vec3.fromValues(-1, -1, 1)
   ];
 
-  const result = createVBObject(points);
+  // create a random color for each point
+  const colors = points.map(() =>
+    vec4.fromValues(Math.random(), Math.random(), Math.random(), 0.6)
+  );
+
+  const result = createVBObject(points, colors);
 
   return result!;
+};
+
+// creates a VBObject from a 2d grid of points based on the specified rows and columns
+const createGridVBObject = (rows: number, columns: number) => {
+  const points = Array.from({ length: rows * columns }, (_, index) => {
+    const x = (index % columns) - (columns - 1) / 2;
+    const y = Math.floor(index / columns) - (rows - 1) / 2;
+    return vec3.fromValues(x, y, 0);
+  });
+
+  points.forEach((point) => {
+    log.debug('point', point);
+  });
+
+  const colors = points.map(() =>
+    vec4.fromValues(Math.random(), Math.random(), Math.random(), 0.6)
+  );
+
+  return createVBObject(points, colors)!;
 };

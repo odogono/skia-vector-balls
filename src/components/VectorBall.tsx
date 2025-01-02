@@ -23,13 +23,15 @@ export type VectorBallProps = {
   blurValue: Mutable<number>;
   size: Mutable<number>;
   pos: Mutable<vec3>;
+  color: Mutable<vec4>;
 };
 
 export const VectorBall = ({
   image,
   blurValue,
   size,
-  pos
+  pos,
+  color
 }: VectorBallProps) => {
   const matrix = useSharedValue(Skia.Matrix());
 
@@ -42,15 +44,12 @@ export const VectorBall = ({
         // m.scale(size, size);
         return m;
       });
-      // if (pos[0] !== 0 && pos[1] !== 0 && pos[2] !== 0) {
-      //   runOnJS(log.debug)('VectorBall', size, pos);
-      // }
     }
   );
 
   if (!image) return null;
 
-  const color = [1.0, 0, 0, 0.6];
+  // const color = [1.0, 0, 0, 0.6];
 
   return (
     <Group matrix={matrix}>
