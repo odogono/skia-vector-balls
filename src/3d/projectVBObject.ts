@@ -1,4 +1,7 @@
+import { runOnJS } from 'react-native-reanimated';
+
 import { mat4, vec4 } from '@3d/glMatrixWorklet';
+import { createLog } from '@helpers/log';
 import { GLMProjection, VBCamera, VBObject, VBScreenObject } from './types';
 import { updateModelViewMatrix } from './updateModelViewMatrix';
 import { vec3FromVector3 } from './vector3';
@@ -10,6 +13,8 @@ interface ProjectVBObjectProps {
   object: VBObject;
   screenObjects: VBScreenObject[];
 }
+
+const log = createLog('projectVBObject');
 
 export const projectVBObject = ({
   camera,
@@ -72,7 +77,10 @@ export const projectVBObject = ({
     screenPoint[0] = (vec4Point[0] / w + 1) * 0.5 * screenWidth;
     screenPoint[1] = (1 - vec4Point[1] / w) * 0.5 * screenHeight;
     screenPoint[2] = vec4Point[2]; //(40 - vec4Point[2]) * 3; // / w;
-    // runOnJS(log.debug)('screenPoint', ii, vec4Point[2], screenPoint[2]);
+    // runOnJS(log.debug)('screenPoint', ii, vec4Point[2], screenPoint[2], {
+    //   screenWidth,
+    //   screenHeight
+    // });
   }
 
   // sort the screenPoints by screenZ

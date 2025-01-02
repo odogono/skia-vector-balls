@@ -7,7 +7,7 @@ import { mat4, quat, vec2, vec3 } from '@3d/glMatrixWorklet';
 import { createLog } from '@helpers/log';
 
 type UseQTrackballRotatorProps = {
-  layout: LayoutRectangle;
+  viewDims: LayoutRectangle;
 };
 
 export type QTrackBallRotatorProps = {
@@ -15,19 +15,21 @@ export type QTrackBallRotatorProps = {
   rotation: quat;
   center: vec2;
   prevPos: vec2;
-  layout: LayoutRectangle;
+  viewDims: LayoutRectangle;
   // radius2: number;
 };
 
-const ROTATION_SENSITIVITY = 8.0;
+const ROTATION_SENSITIVITY = 24.0;
 
 const log = createLog('useQTrackballRotator');
 
-export const useQTrackballRotator = ({ layout }: UseQTrackballRotatorProps) => {
+export const useQTrackballRotator = ({
+  viewDims
+}: UseQTrackballRotatorProps) => {
   const props = useDerivedValue<QTrackBallRotatorProps>(() => {
     const viewMatrix = mat4.create();
     const rotation = quat.create();
-    const center = vec2.fromValues(layout.width / 2, layout.height / 2);
+    const center = vec2.fromValues(viewDims.width / 2, viewDims.height / 2);
     const radius = Math.min(center[0], center[1]);
     const prevPos = vec2.fromValues(0, 0);
 
@@ -37,7 +39,7 @@ export const useQTrackballRotator = ({ layout }: UseQTrackballRotatorProps) => {
       center,
       radius,
       prevPos,
-      layout
+      viewDims
     };
 
     updateViewMatrix(result);
@@ -97,10 +99,10 @@ const updateViewMatrix = (props: QTrackBallRotatorProps) => {
 };
 
 // Convert screen coordinates to sphere coordinates
-const projectToSphere = (pos: vec2, { layout }: QTrackBallRotatorProps) => {
+const projectToSphere = (pos: vec2, { viewDims }: QTrackBallRotatorProps) => {
   'worklet';
   const [x, y] = pos;
-  const { width, height } = layout;
+  const { width, height } = viewDims;
 
   // Map input to [-1, 1] range
   const r = Math.min(width, height) * 0.5;

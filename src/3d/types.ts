@@ -14,9 +14,6 @@ export type VBObject = {
   sizes: Mutable<number[]>;
   blur: Mutable<number[]>;
   rotation: Mutable<Vector3>;
-  rotationX: Mutable<number>;
-  rotationY: Mutable<number>;
-  rotationZ: Mutable<number>;
   translation: Mutable<Vector3>;
   scale: Mutable<Vector3>;
 };
@@ -25,6 +22,7 @@ export type GLMProjection = {
   matrix: mat4;
   screenWidth: number;
   screenHeight: number;
+  isValid: boolean;
 };
 
 export type VBCamera = {

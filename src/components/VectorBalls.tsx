@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { LayoutRectangle, StyleSheet } from 'react-native';
 
 import {
@@ -28,6 +28,8 @@ import { useVBProjection } from '@3d/hooks/useVBProjection';
 import { useVectorBallStore } from '@3d/model/VectorBallStore';
 import { createLog } from '@helpers/log';
 import { useObj } from '@hooks/useObj';
+import { useViewDims } from '@hooks/useViewDims';
+import { createVBObject } from '../3d/createVBObject';
 import { createVector3 } from '../3d/vector3';
 import { debugMsg2, debugMsg3, debugMsg } from './Debug/Debug';
 import { VectorBall } from './VectorBall';
@@ -35,66 +37,46 @@ import { VectorBall } from './VectorBall';
 const log = createLog('VectorBalls');
 
 export const VectorBalls = () => {
-  const [layout, setLayout] = useState<LayoutRectangle>({
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0
-  });
+  const { areViewDimsValid, viewDims, setViewDims } = useViewDims();
   const [viewMatrix, setViewMatrix] = useState<SkMatrix>();
   const image1 = useImage(require('@assets/images/sphere-a.png'));
-  const cube = useObj('tree');
 
-  // const testVec = useSharedValue(0);
-  // const testVec2 = useSharedValue([0]);
-  // const testVec3 = useSharedValue({ x: 0 });
+  // const cube = useObj('tree');
+
+  const object = useMemo(() => createCube(), []);
 
   const camera = useVBCamera();
 
   const screenObjects = useVectorBallStore({ length: 80 });
 
   const { projection } = useVBProjection({
-    layout
+    viewDims
   });
 
   const { gesture, props } = useQTrackballRotator({
-    layout
+    viewDims
   });
 
-  const cubeObject = useVBProjectedObject({
+  useVBProjectedObject({
+    areViewDimsValid,
+    object,
     camera,
     projection,
     props,
-    points: cube,
     screenObjects
   });
 
-  // useAnimatedReaction(
-  //   () => [testVec.value, testVec2.value, testVec3.value],
-  //   ([value, value2, value3]) => {
-  //     // const { x, y, z } = value3;
-  //     // debugMsg.value = `${value.toFixed(2)}`;
-  //     // debugMsg2.value = `${value2[0].toFixed(2)} ${value2[1].toFixed(2)} ${value2[2].toFixed(2)}`;
-  //     // debugMsg3.value = `${x.toFixed(2)} ${y.toFixed(2)} ${z.toFixed(2)}`;
-  //   }
-  // );
-
+  // object.rotation.value = withRepeat(
   useEffect(() => {
-    // cubeObject.rotationY.value = Math.PI / 2.5;
-    // cubeObject.rotationY.value = withRepeat(
-    //   withTiming(Math.PI * 2, { duration: 4000, easing: Easing.linear }),
+    // object.rotation.value = withRepeat(
+    //   withTiming(createVector3(0, Math.PI * 2, Math.PI * 2), {
+    //     duration: 4000,
+    //     easing: Easing.linear
+    //   }),
     //   -1,
     //   false
     // );
-
-    cubeObject.rotation.value = withRepeat(
-      withTiming(createVector3(0, Math.PI * 2, 0), {
-        duration: 4000,
-        easing: Easing.linear
-      }),
-      -1,
-      false
-    );
+    // object.rotation.value = createVector3(0, 0.1, 0);
 
     camera.pos.value = createVector3(0, 0, -10);
 
@@ -109,19 +91,9 @@ export const VectorBalls = () => {
     //   false
     // );
 
-    // cubeObject.rotationX.value = withRepeat(
-    //   withTiming(Math.PI * 2, { duration: 5000, easing: Easing.linear }),
-    //   -1,
-    //   false
-    // );
-    // cubeObject.rotationZ.value = withRepeat(
-    //   withTiming(Math.PI * 2, { duration: 5000, easing: Easing.linear }),
-    //   -1,
-    //   false
-    // );
-    cubeObject.scale.value = createVector3(3, 2, 3);
-    cubeObject.translation.value = createVector3(0, 0, 15);
-    // cubeObject.translation.value = withRepeat(
+    object.scale.value = createVector3(3, 3, 3);
+    object.translation.value = createVector3(0, 0, 15);
+    // object.translation.value = withRepeat(
     //   withTiming(createVector3(0, 0, 5), {
     //     duration: 2000
     //     // easing: Easing.linear
@@ -129,23 +101,14 @@ export const VectorBalls = () => {
     //   -1,
     //   true
     // );
-  }, [cubeObject]);
-
-  useAnimatedReaction(
-    () => cube,
-    (cube) => {
-      const count = cube.length;
-
-      runOnJS(log.debug)(`cube length: ${count}`);
-    }
-  );
+  }, [object]);
 
   return (
     <GestureDetector gesture={gesture}>
       <SkiaCanvas
         style={styles.canvas}
         onLayout={(event) => {
-          setLayout(event.nativeEvent.layout);
+          setViewDims(event.nativeEvent.layout);
           const m = Skia.Matrix();
           // m.translate(width / 2, height / 2);
           setViewMatrix(m);
@@ -173,3 +136,20 @@ const styles = StyleSheet.create({
     width: '100%'
   }
 });
+
+const createCube = () => {
+  const points = [
+    vec3.fromValues(1, 1, -1),
+    vec3.fromValues(1, -1, -1),
+    vec3.fromValues(1, 1, 1),
+    vec3.fromValues(1, -1, 1),
+    vec3.fromValues(-1, 1, -1),
+    vec3.fromValues(-1, -1, -1),
+    vec3.fromValues(-1, 1, 1),
+    vec3.fromValues(-1, -1, 1)
+  ];
+
+  const result = createVBObject(points);
+
+  return result!;
+};

@@ -1,22 +1,40 @@
 import { LayoutRectangle } from 'react-native';
 
-import { useDerivedValue } from 'react-native-reanimated';
+import {
+  DerivedValue,
+  runOnJS,
+  useDerivedValue
+} from 'react-native-reanimated';
 
 import { mat4 } from '@3d/glMatrixWorklet';
+import { createLog } from '@helpers/log';
+import { GLMProjection } from '../types';
 
 export interface UseVBProjectionProps {
-  layout: LayoutRectangle;
+  viewDims: LayoutRectangle;
 }
 
-export const useVBProjection = ({ layout }: UseVBProjectionProps) => {
-  const projection = useDerivedValue(() => {
+const log = createLog('useVBProjection');
+
+export const useVBProjection = ({ viewDims }: UseVBProjectionProps) => {
+  // const areViewDimsValid = useDerivedValue(() => {
+  //   // log.debug('areViewDimsValid', viewDims);
+  //   return viewDims.width > 0 && viewDims.height > 0;
+  // });
+
+  const projection: DerivedValue<GLMProjection> = useDerivedValue(() => {
+    const isValid = viewDims.width > 0 && viewDims.height > 0;
     const projection = {
       matrix: mat4.create(),
-      screenWidth: layout.width,
-      screenHeight: layout.height
+      screenWidth: viewDims.width,
+      screenHeight: viewDims.height,
+      isValid
     };
+
+    if (!isValid) return projection;
+
     const fov = Math.PI / 4; // 45 degrees in radians
-    const aspectRatio = layout.width / layout.height;
+    const aspectRatio = viewDims.width / viewDims.height;
     const near = 0.1;
     const far = 1000;
 

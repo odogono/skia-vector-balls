@@ -1,12 +1,8 @@
 import { useMemo } from 'react';
 
-import {
-  makeMutable,
-  runOnJS,
-  useAnimatedReaction
-} from 'react-native-reanimated';
+import { makeMutable, useAnimatedReaction } from 'react-native-reanimated';
 
-import { mat4, vec3 } from '@3d/glMatrixWorklet';
+import { mat4 } from '@3d/glMatrixWorklet';
 import { createLog } from '@helpers/log';
 import { Vector3 } from '@types';
 import { VBCamera } from '../types';
@@ -37,7 +33,7 @@ const createVBCamera = ({
     vec3FromVector3(up)
   );
 
-  log.debug('createVBCamera', eye, center, up);
+  // log.debug('createVBCamera', eye, center, up);
 
   return {
     pos: makeMutable<Vector3>(eye),

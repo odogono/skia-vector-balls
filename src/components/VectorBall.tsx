@@ -6,11 +6,17 @@ import {
   SkImage,
   Skia
 } from '@shopify/react-native-skia';
-import { useAnimatedReaction, useSharedValue } from 'react-native-reanimated';
+import {
+  runOnJS,
+  useAnimatedReaction,
+  useSharedValue
+} from 'react-native-reanimated';
 
 import { vec3 } from '@3d/glMatrixWorklet';
 import { createLog } from '@helpers/log';
 import { Mutable } from '@types';
+
+const log = createLog('VectorBall');
 
 export type VectorBallProps = {
   image: SkImage | null;
@@ -36,14 +42,19 @@ export const VectorBall = ({
         // m.scale(size, size);
         return m;
       });
+      // if (pos[0] !== 0 && pos[1] !== 0 && pos[2] !== 0) {
+      //   runOnJS(log.debug)('VectorBall', size, pos);
+      // }
     }
   );
 
   if (!image) return null;
 
+  const color = [1.0, 0, 0, 0.6];
+
   return (
     <Group matrix={matrix}>
-      <BlendColor color='#00FF0077' mode='srcATop' />
+      <BlendColor color={color} mode='srcATop' />
       <Image image={image} fit='contain' width={size} height={size}>
         <Blur blur={blurValue} />
       </Image>
