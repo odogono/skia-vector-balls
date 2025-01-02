@@ -42,6 +42,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         resizeMode: 'contain',
         backgroundColor: '#ffffff'
       }
+    ],
+    [
+      'expo-image-picker',
+      {
+        photosPermission:
+          'The app accesses your photos to let you choose an image to display.'
+      }
     ]
   ],
   experiments: {

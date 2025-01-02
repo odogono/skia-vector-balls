@@ -188,10 +188,6 @@ const createGridVBObject = (rows: number, columns: number) => {
     return vec3.fromValues(x, y, 0);
   });
 
-  points.forEach((point) => {
-    log.debug('point', point);
-  });
-
   const colors = points.map(() =>
     vec4.fromValues(Math.random(), Math.random(), Math.random(), 0.6)
   );
