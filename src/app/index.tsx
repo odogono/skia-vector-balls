@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import * as ImagePicker from 'expo-image-picker';
@@ -6,11 +7,16 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Debug } from '@components/Debug/Debug';
 import { VectorBalls } from '@components/VectorBalls';
 import { Ionicons } from '@expo/vector-icons';
+import { sampleImageColors } from '@helpers/image';
 import { createLog } from '@helpers/log';
 
 const log = createLog('app');
 
 export default () => {
+  const rows = 20;
+  const columns = 10;
+  const [colors, setColors] = useState<vec4[]>([]);
+
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ['images'],
@@ -20,15 +26,25 @@ export default () => {
     });
 
     if (!result.canceled) {
-      // Handle the selected image here
-      log.debug('result', result.assets[0].uri);
+      try {
+        // Sample colors in a 10x10 grid
+        const colors = await sampleImageColors(
+          result.assets[0].uri,
+          rows,
+          columns
+        );
+        // log.debug('Sampled colors:', colors);
+        setColors(colors);
+      } catch (error) {
+        log.error('Error sampling colors:', error);
+      }
     }
   };
 
   return (
     <GestureHandlerRootView style={styles.gestureContainer}>
       <View style={styles.container}>
-        <VectorBalls />
+        <VectorBalls colors={colors} rows={rows} columns={columns} />
         {/* <Debug /> */}
         <Pressable style={styles.imagePickerButton} onPress={pickImage}>
           <Ionicons name='image' size={24} color='white' />

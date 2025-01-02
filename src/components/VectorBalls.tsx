@@ -38,18 +38,24 @@ import { VectorBall } from './VectorBall';
 
 const log = createLog('VectorBalls');
 
-export const VectorBalls = () => {
+export type VectorBallsProps = {
+  colors: vec4[];
+  rows: number;
+  columns: number;
+};
+
+export const VectorBalls = ({ colors, rows, columns }: VectorBallsProps) => {
   const { areViewDimsValid, viewDims, setViewDims } = useViewDims();
   const [viewMatrix, setViewMatrix] = useState<SkMatrix>();
   const image1 = useImage(require('@assets/images/sphere-a.png'));
 
   // const cube = useObj('tree');
 
-  const rows = 14;
-  const columns = 9;
-
-  const object = useMemo(() => createGridVBObject(rows, columns), []);
-  const objectScale = 1.3;
+  const object = useMemo(
+    () => createGridVBObject(rows, columns, colors),
+    [colors, rows, columns]
+  );
+  const objectScale = 1.0;
 
   const camera = useVBCamera();
 
@@ -86,7 +92,7 @@ export const VectorBalls = () => {
 
     camera.pos.value = createVector3(0, 0, -10);
 
-    camera.pos.value = createVector3(0, 0, -10);
+    camera.pos.value = createVector3(0, 0, -15);
     // camera.pos.value = createVector3(0, 0, -50);
     // camera.pos.value = withRepeat(
     //   withTiming(createVector3(0, 0, -10), {
@@ -132,7 +138,7 @@ export const VectorBalls = () => {
             />
           ))}
         </Group>
-        <Rect
+        {/* <Rect
           x={viewDims.width / 2}
           y={0}
           width={1}
@@ -145,7 +151,7 @@ export const VectorBalls = () => {
           width={viewDims.width}
           height={1}
           color='red'
-        />
+        /> */}
       </SkiaCanvas>
     </GestureDetector>
   );
@@ -181,16 +187,23 @@ const createCube = () => {
 };
 
 // creates a VBObject from a 2d grid of points based on the specified rows and columns
-const createGridVBObject = (rows: number, columns: number) => {
+const createGridVBObject = (rows: number, columns: number, colors: vec4[]) => {
   const points = Array.from({ length: rows * columns }, (_, index) => {
     const x = (index % columns) - (columns - 1) / 2;
     const y = Math.floor(index / columns) - (rows - 1) / 2;
     return vec3.fromValues(x, y, 0);
   });
 
-  const colors = points.map(() =>
-    vec4.fromValues(Math.random(), Math.random(), Math.random(), 0.6)
-  );
+  const applyColors =
+    colors && colors.length === points.length
+      ? colors
+      : points.map(() =>
+          vec4.fromValues(Math.random(), Math.random(), Math.random(), 0.6)
+        );
 
-  return createVBObject(points, colors)!;
+  // const colors = points.map(() =>
+  //   vec4.fromValues(Math.random(), Math.random(), Math.random(), 0.6)
+  // );
+
+  return createVBObject(points, applyColors)!;
 };
